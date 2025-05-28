@@ -1,5 +1,7 @@
 {
     "doctor_url": "https://xiaoce.fun/guessdisease",
     "cooking_url": "https://xiaoce.fun/cooking",
-    "max_attempts": 50
+    "song_url": "https://xiaoce.fun/lyric",
+    "max_attempts": 50,
+    "song_guess_delay": 0.0
 }
