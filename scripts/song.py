@@ -1,3 +1,4 @@
+import os
 import time
 import json
 from selenium import webdriver
@@ -43,6 +44,8 @@ def main():
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-logging")
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
     driver = webdriver.Chrome(service=service, options=options)
     driver.implicitly_wait(0)
     driver.get(game_url)

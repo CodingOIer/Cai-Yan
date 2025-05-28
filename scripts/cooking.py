@@ -89,6 +89,8 @@ def main():
             webdriver_manager.chrome.ChromeDriverManager().install()
         )
         options = webdriver.ChromeOptions()
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(GAME_URL)
         log.success("网站已打开。等待页面加载...")
