@@ -4,6 +4,7 @@ import doctor
 import cooking
 import crime
 import song
+import autoGuess
 
 menu = '''
 Cai-Yan 工具合计，目前已有：
@@ -11,6 +12,7 @@ Cai-Yan 工具合计，目前已有：
 2. AI 厨师助手（需要大模型 API）
 3. AI 猜罪助手（需要大模型 API）
 4. 暴力枚举猜歌助手（速度较慢，不建议使用）
+5. 模拟键盘填字助手（按照中文字频依次填入，可用于 Enter 确定/自动匹配）
 对应的 AI 提示词可以在 /sciripts/prompt 中查看与修改，默认为利于游戏胜利的提示词。
 部分游戏会唤起 Chrome 浏览器自动操作，请不要在唤起的 Chrome 中操作。
 '''
@@ -36,3 +38,7 @@ if __name__ == '__main__':
             time.sleep(0.5)
             os.system('cls' if os.environ.get('OS') == 'Windows_NT' else 'clear')
             song.main()
+        if id == '5':
+            time.sleep(0.5)
+            os.system('cls' if os.environ.get('OS') == 'Windows_NT' else 'clear')
+            autoGuess.main()
