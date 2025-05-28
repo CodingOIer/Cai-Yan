@@ -4,8 +4,8 @@ import json
 import traceback
 import webdriver_manager.chrome
 from selenium import webdriver
-from selenium.webdriver.support import ui as selenium_ui
-from selenium.webdriver.support import expected_conditions as selenium_ec
+from selenium.webdriver.support import ui as seleniumUi
+from selenium.webdriver.support import expected_conditions as seleniumEc
 from selenium.webdriver.common import by
 from loguru import logger as log
 
@@ -35,21 +35,21 @@ def setup():
 def getPatientResponses(driver):
     responses = []
     try:
-        selenium_ui.WebDriverWait(driver, 5).until(
-            selenium_ec.presence_of_element_located(
+        seleniumUi.WebDriverWait(driver, 5).until(
+            seleniumEc.presence_of_element_located(
                 (
                     by.By.XPATH,
                     "//div[contains(@class, 'ant-flex-vertical') and contains(@style, 'margin: 10px 0px')]",
                 )
             )
         )
-        patient_message_elements = driver.find_elements(
+        patientMessageElements = driver.find_elements(
             by.By.XPATH,
             "//div[contains(@class, 'ant-flex-vertical') and contains(@style, 'margin: 10px 0px')]"
             "//div[contains(@style, 'align-self: start')]"
             "//div[@class='ant-alert-message']",
         )
-        for elem in patient_message_elements:
+        for elem in patientMessageElements:
             responses.append(elem.text.strip())
     except Exception as e:
         log.error(f"提取病人回复时出错: {e}")
@@ -59,21 +59,21 @@ def getPatientResponses(driver):
 def getDoctorInputs(driver):
     inputs = []
     try:
-        selenium_ui.WebDriverWait(driver, 5).until(
-            selenium_ec.presence_of_element_located(
+        seleniumUi.WebDriverWait(driver, 5).until(
+            seleniumEc.presence_of_element_located(
                 (
                     by.By.XPATH,
                     "//div[contains(@class, 'ant-flex-vertical') and contains(@style, 'margin: 10px 0px')]",
                 )
             )
         )
-        my_input_elements = driver.find_elements(
+        myInputElements = driver.find_elements(
             by.By.XPATH,
             "//div[contains(@class, 'ant-flex-vertical') and contains(@style, 'margin: 10px 0px')]"
             "//div[contains(@style, 'align-self: end')]"
             "//div[@class='ant-alert-message']",
         )
-        for elem in my_input_elements:
+        for elem in myInputElements:
             inputs.append(elem.text.strip())
     except Exception as e:
         log.error(f"提取我方输入时出错: {e}")
@@ -92,8 +92,8 @@ def main():
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(GAME_URL)
         log.success("网站已打开。等待页面加载...")
-        input_field = selenium_ui.WebDriverWait(driver, 20).until(
-            selenium_ec.presence_of_element_located(
+        inputField = seleniumUi.WebDriverWait(driver, 20).until(
+            seleniumEc.presence_of_element_located(
                 (
                     by.By.CSS_SELECTOR,
                     "input[placeholder^='写下你的问题或猜测']",
@@ -103,51 +103,49 @@ def main():
         conversationHistory = []
         attempts = 0
         time.sleep(0.3)
-        initial_patient_responses = getPatientResponses(driver)
-        if initial_patient_responses:
-            last_initial_message = initial_patient_responses[-1]
-            log.info(f"初始病人消息: {last_initial_message}")
+        initialPatientResponses = getPatientResponses(driver)
+        if initialPatientResponses:
+            lastInitialMessage = initialPatientResponses[-1]
+            log.info(f"初始病人消息: {lastInitialMessage}")
             conversationHistory.append(
-                {"role": "assistant", "content": last_initial_message}
+                {"role": "assistant", "content": lastInitialMessage}
             )
         else:
             log.error("未能捕获到初始病人消息。")
         while attempts < MAX_ATTEMPTS:
             attempts += 1
             log.info(f"第 {attempts} 次尝试")
-            if not conversationHistory and not initial_patient_responses:
+            if not conversationHistory and not initialPatientResponses:
                 log.warning("对话历史为空，让LLM决定第一个问题。")
             suggestion = base.model.chat(conversationHistory, SYSTEM_PROMPT)
             if not suggestion:
                 log.critical("LLM 未能提供建议，终止程序。")
                 break
             log.info(f"准备输入: '{suggestion}'")
-            input_field.clear()
-            input_field.send_keys(suggestion)
+            inputField.clear()
+            inputField.send_keys(suggestion)
             time.sleep(0.1)
-            send_button = selenium_ui.WebDriverWait(driver, 10).until(
-                selenium_ec.element_to_be_clickable(
+            sendButton = seleniumUi.WebDriverWait(driver, 10).until(
+                seleniumEc.element_to_be_clickable(
                     (
                         by.By.XPATH,
                         "//button[.//span[contains(text(),'发 送')]]",
                     )
                 )
             )
-            send_button.click()
+            sendButton.click()
             log.info("已发送。等待网站响应 (等待转圈消失)...")
-            spinner_xpath = "//div[contains(@class, 'ant-spin') and contains(@class, 'ant-spin-spinning')]"
+            spinnerXpath = "//div[contains(@class, 'ant-spin') and contains(@class, 'ant-spin-spinning')]"
             try:
-                selenium_ui.WebDriverWait(driver, 3).until(
-                    selenium_ec.presence_of_element_located(
-                        (by.By.XPATH, spinner_xpath)
-                    )
+                seleniumUi.WebDriverWait(driver, 3).until(
+                    seleniumEc.presence_of_element_located((by.By.XPATH, spinnerXpath))
                 )
             except:
                 pass
             try:
-                selenium_ui.WebDriverWait(driver, 60).until(
-                    selenium_ec.invisibility_of_element_located(
-                        (by.By.XPATH, spinner_xpath)
+                seleniumUi.WebDriverWait(driver, 60).until(
+                    seleniumEc.invisibility_of_element_located(
+                        (by.By.XPATH, spinnerXpath)
                     )
                 )
                 log.info("网站已响应 (转圈已消失)。")
