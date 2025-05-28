@@ -1,3 +1,5 @@
+pip install pyinstaller
+
 pyinstaller `
   --onefile `
   --name CaiYanTool `
