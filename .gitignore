@@ -2,3 +2,7 @@ __pycache__
 .venv
 .vscode
 model_settings.json
+
+dist
+build
+*.spec
