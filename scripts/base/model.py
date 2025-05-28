@@ -43,7 +43,7 @@ def chat(recent: list, systemPrompt: str = '', temperature: float = 0.7):
         }
         payload = {
             "messages": (
-                [{"content": systemPrompt, "role": "system"}] + recent
+                recent + [{"content": systemPrompt, "role": "system"}]
                 if systemPrompt
                 else recent
             ),
