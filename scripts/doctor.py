@@ -1,12 +1,12 @@
 import base
 import time
 import json
+import traceback
+import webdriver_manager.chrome
 from selenium import webdriver
 from selenium.webdriver.support import ui as selenium_ui
 from selenium.webdriver.support import expected_conditions as selenium_ec
 from selenium.webdriver.common import by
-import traceback
-import webdriver_manager.chrome
 from loguru import logger as log
 
 GAME_URL = ''
@@ -22,14 +22,14 @@ def setup():
             GAME_URL = data['doctor_url']
             MAX_ATTEMPTS = data['max_attempts']
     except Exception as e:
-        log.critical(f'猜盐网址及配置文件错误 {e}')
+        log.critical(f'配置文件读取错误 {e}')
         exit(0)
 
     try:
         with open('./prompt/doctor.md', 'r', encoding='utf-8') as f:
             SYSTEM_PROMPT = f.read()
     except Exception as e:
-        log.error(f'获取获取系统提示词失败 {e}')
+        log.error(f'获取系统提示词失败 {e}')
 
 
 def getPatientResponses(driver):
