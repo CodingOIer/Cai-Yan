@@ -1,0 +1,72 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.3"
+
+      - name: Create Virtual Environment
+        run: python -m venv .venv
+
+      - name: Grant execution permission (Linux only)
+        if: runner.os == 'Linux'
+        run: chmod +x build-scripts/build.sh
+
+      - name: Run Build Script (Windows)
+        if: runner.os == 'Windows'
+        run: ./build-scripts/build.ps1
+
+      - name: Run Build Script (Linux)
+        if: runner.os == 'Linux'
+        run: ./build-scripts/build.sh
+
+      - name: Rename Output Files
+        if: runner.os == 'Windows'
+        run: mv dist/CaiYanTool.exe dist/CanYanTool-win.exe
+
+      - name: Rename Output Files (Linux)
+        if: runner.os == 'Linux'
+        run: mv dist/CaiYanTool dist/CanYanTool-linux
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: CanYanTool-${{ runner.os }}
+          path: dist/CanYanTool-*
+  
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/CanYanTool-*

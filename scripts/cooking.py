@@ -1,3 +1,4 @@
+import os
 import base
 import time
 import json
@@ -15,6 +16,7 @@ SYSTEM_PROMPT = ''
 
 
 def setup():
+    base.model.setup()
     global GAME_URL, MAX_ATTEMPTS, SYSTEM_PROMPT
     try:
         with open('./settings.json', 'r', encoding='utf-8') as f:
@@ -89,6 +91,8 @@ def main():
             webdriver_manager.chrome.ChromeDriverManager().install()
         )
         options = webdriver.ChromeOptions()
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(GAME_URL)
         log.success("网站已打开。等待页面加载...")
@@ -204,5 +208,4 @@ def main():
 
 
 if __name__ == "__main__":
-    base.model.setup()
     main()

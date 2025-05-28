@@ -1,3 +1,5 @@
+import os
+import sys
 import json
 import requests
 from loguru import logger as log
@@ -7,10 +9,22 @@ MODEL_API_KEY = ''
 MODEL_API_NAME = ''
 
 
+def getDataPath():
+    if sys.platform == "win32":
+        base_path = os.getenv("APPDATA") or os.path.expanduser("~\\AppData\\Roaming")
+    else:
+        base_path = os.getenv("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+    targetPath = os.path.join(base_path, "Cai-Yan")
+    if not os.path.exists(targetPath):
+        os.makedirs(targetPath)
+    return targetPath
+
+
 def setup():
     global MODEL_API_URL, MODEL_API_KEY, MODEL_API_NAME
+    settingsPath = f'{getDataPath()}/model_settings.json'
     try:
-        with open('./model_settings.json', 'r', encoding='utf-8') as f:
+        with open(settingsPath, 'r', encoding='utf-8') as f:
             data = json.load(f)
             MODEL_API_URL = data['url']
             MODEL_API_KEY = data['key']
@@ -22,7 +36,7 @@ def setup():
         MODEL_API_NAME = input('大模型 API 名称 > ')
         write = input('是否保存配置？(y/N) > ').lower()
         if write in ['y', 'yes']:
-            with open('./model_settings.json', 'w', encoding='utf-8') as f:
+            with open(settingsPath, 'w', encoding='utf-8') as f:
                 json.dump(
                     {
                         'url': MODEL_API_URL,

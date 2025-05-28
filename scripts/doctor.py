@@ -1,3 +1,4 @@
+import os
 import base
 import time
 import json
@@ -81,6 +82,7 @@ def getDoctorInputs(driver):
 
 
 def main():
+    base.model.setup()
     setup()
     log.success("正在启动浏览器并打开游戏网站...")
     driver = None
@@ -89,6 +91,8 @@ def main():
             webdriver_manager.chrome.ChromeDriverManager().install()
         )
         options = webdriver.ChromeOptions()
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(GAME_URL)
         log.success("网站已打开。等待页面加载...")
@@ -220,5 +224,4 @@ def main():
 
 
 if __name__ == "__main__":
-    base.model.setup()
     main()

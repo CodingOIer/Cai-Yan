@@ -36,7 +36,3 @@ if __name__ == '__main__':
             time.sleep(0.5)
             os.system('cls' if os.environ.get('OS') == 'Windows_NT' else 'clear')
             song.main()
-        else:
-            print('请输入正确的编号！')
-            input('按回车键继续...')
-    pass
