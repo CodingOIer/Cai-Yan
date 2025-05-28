@@ -33,7 +33,7 @@ def setup():
                 )
 
 
-def chat(recent: list, temperature: float = 0.7):
+def chat(recent: list, systemPrompt: str = '', temperature: float = 0.7):
     if not MODEL_API_URL or not MODEL_API_KEY:
         setup()
     try:
@@ -42,11 +42,14 @@ def chat(recent: list, temperature: float = 0.7):
             "Content-Type": "application/json",
         }
         payload = {
-            "messages": recent,
+            "messages": (
+                [{"content": systemPrompt, "role": "system"}] + recent
+                if systemPrompt
+                else recent
+            ),
             "temperature": temperature,
             'model': MODEL_API_NAME,
         }
-
         response = requests.post(
             MODEL_API_URL + '/v1/chat/completions',
             headers=headers,
