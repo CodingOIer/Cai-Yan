@@ -3,6 +3,7 @@
     "cooking_url": "https://xiaoce.fun/cooking",
     "crime_url": "https://xiaoce.fun/guesscrime",
     "song_url": "https://xiaoce.fun/lyric",
+    "cute_url": "https://xiaoce.fun/guesscute",
     "max_attempts": 50,
     "song_guess_delay": 0.0,
     "auto_guess_delay": 0.05
