@@ -65,10 +65,9 @@ jobs:
         with:
           path: dist/
 
-      - name: 列出所有文件
-        run: ls -R ${{ github.workspace }}
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/CanYanTool-*
+          files: |
+            dist/CanYanTool-Windows/CanYanTool-win.exe
+            dist/CanYanTool-Linux/CanYanTool-linux
