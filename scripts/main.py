@@ -39,4 +39,3 @@ if __name__ == '__main__':
         else:
             print('请输入正确的编号！')
             input('按回车键继续...')
-    pass
