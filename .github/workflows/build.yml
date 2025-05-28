@@ -55,32 +55,35 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (full history)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist/
 
-      - name: Determine Target Branch
-        id: branch_check
-        run: echo "branch_name=$(echo ${GITHUB_REF} | sed -E 's/refs\/tags\/(develop|master).*/\1/')" >> $GITHUB_ENV
+      - name: Determine Pre-release
+        run: |
+          # 确保本地有 develop 与 master 分支信息
+          git fetch origin master develop
+          # 如果该 tag 所指向的提交在 develop 分支上，则标记为预发布
+          if git branch -r --contains $GITHUB_SHA | grep -q 'origin/develop'
+          then
+            echo "PRERELEASE=true" >> $GITHUB_ENV
+          else
+            echo "PRERELEASE=false" >> $GITHUB_ENV
+          fi
 
-      - name: Create GitHub Release (Pre-release for develop)
-        if: env.branch_name == 'develop'
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           files: |
             dist/CanYanTool-Windows/CanYanTool-win.exe
             dist/CanYanTool-Linux/CanYanTool-linux
-
-      - name: Create GitHub Release (Stable for master)
-        if: env.branch_name == 'master'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            dist/CanYanTool-Windows/CanYanTool-win.exe
-            dist/CanYanTool-Linux/CanYanTool-linux
+          # 当 PRERELEASE=true 时，该 release 会被标记为 pre-release
+          prerelease: ${{ env.PRERELEASE }}
