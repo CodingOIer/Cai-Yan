@@ -3,21 +3,39 @@
 ## 使用方式
 
 1. 克隆本仓库到本地目录
+
    ```bash
    git clone https://github.com/CodingOIer/Cai-Yan.git
    ```
+
 2. 安装 Python 依赖
+
    可选：创建虚拟环境
+
    ```bash
    python -m venv .venv
+   ```
+
+   激活虚拟环境 **Linux/MacOs**
+
+   ```bash
    source .venv/bin/activate (*unix)
+   ```
+
+   激活虚拟环境 **Windows**
+
+   ```bash
    .\.venv\Scripts\Activate.ps1 (Windows)
    ```
+
    安装依赖
+
    ```bash
    pip install -r requirements.txt
    ```
+
 3. 运行主程序
+
    ```bash
    python scripts/main.py
    ```

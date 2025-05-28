@@ -214,9 +214,13 @@ def main():
     finally:
         if driver:
             input("按 Enter 关闭浏览器...")
-            driver.quit()
+            try:
+                driver.quit()
+            except:
+                pass
         log.info("程序结束。")
 
 
 if __name__ == "__main__":
+    base.model.setup()
     main()
