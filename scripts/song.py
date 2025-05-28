@@ -25,7 +25,7 @@ def loadSettings():
         log.warning(f"读取 settings.json 出错，使用默认参数: {e}")
 
 
-def load_charset():
+def loadCharset():
     global char_set
     try:
         with open('charset/chinese-6750.txt', encoding='utf-8') as f:
@@ -38,7 +38,7 @@ def load_charset():
 
 def main():
     loadSettings()
-    load_charset()
+    loadCharset()
     log.success("正在启动浏览器并打开歌曲游戏网站...")
     service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()

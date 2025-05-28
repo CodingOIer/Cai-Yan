@@ -16,6 +16,7 @@ SYSTEM_PROMPT = ''
 
 
 def setup():
+    base.model.setup()
     global GAME_URL, MAX_ATTEMPTS, SYSTEM_PROMPT
     try:
         with open('./settings.json', 'r', encoding='utf-8') as f:
@@ -207,5 +208,4 @@ def main():
 
 
 if __name__ == "__main__":
-    base.model.setup()
     main()

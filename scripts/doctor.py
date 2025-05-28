@@ -82,6 +82,7 @@ def getDoctorInputs(driver):
 
 
 def main():
+    base.model.setup()
     setup()
     log.success("正在启动浏览器并打开游戏网站...")
     driver = None
@@ -223,5 +224,4 @@ def main():
 
 
 if __name__ == "__main__":
-    base.model.setup()
     main()
