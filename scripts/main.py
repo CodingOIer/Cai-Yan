@@ -6,7 +6,7 @@ import cooking
 menu = '''
 Cai-Yan 工具合计，目前已有：
 1. AI 医生助手
-1. AI 厨师助手
+2. AI 厨师助手
 对应的 AI 提示词可以在 /sciripts/prompt 中查看与修改，默认为利于游戏胜利的提示词。
 部分游戏会唤起 Chrome 浏览器自动操作，请不要在唤起的 Chrome 中操作。
 '''
